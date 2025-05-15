@@ -1,0 +1,53 @@
+[package]
+name = "rustfix"
+version = "0.8.4"
+authors = [
+  "Pascal Hertleif <killercup@gmail.com>",
+  "Oliver Schneider <oli-obk@users.noreply.github.com>",
+]
+edition = "2021"
+homepage = "https://github.com/rust-lang/cargo"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/rust-lang/cargo"
+rust-version = "1.76" # MSRV:3
+description = "Automatically apply the suggestions made by rustc"
+documentation = "https://docs.rs/rustfix"
+exclude = ["examples/*", "tests/*"]
+
+[dependencies]
+# serde = { workspace = true, features = ["derive"] }
+serde = { version = "1.0.199", features = ["derive"] }
+# serde_json.workspace = true
+serde_json = "1.0.116"
+# thiserror.workspace = true
+thiserror = "1.0.59"
+# tracing.workspace = true
+tracing = "0.1.40" # be compatible with rustc_log: https://github.com/rust-lang/rust/blob/e51e98dde6a/compiler/rustc_log/Cargo.toml#L9
+
+[dev-dependencies]
+# anyhow.workspace = true
+anyhow = "1.0.82"
+# proptest.workspace = true
+proptest = "1.4.0"
+similar = "2.5.0"
+# tempfile.workspace = true
+tempfile = "3.10.1"
+# tracing-subscriber.workspace = true
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+
+# [lints]
+# workspace = true
+
+[lints.rust]
+rust_2018_idioms = "warn" # TODO: could this be removed?
+
+[lints.rustdoc]
+private_intra_doc_links = "allow"
+
+[lints.clippy]
+all = { level = "allow", priority = -1 }
+dbg_macro = "warn"
+disallowed_methods = "warn"
+print_stderr = "warn"
+print_stdout = "warn"
+self_named_module_files = "warn"
