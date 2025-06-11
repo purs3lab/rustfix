@@ -29,6 +29,8 @@ mod replace;
 use diagnostics::Diagnostic;
 use diagnostics::DiagnosticSpan;
 pub use error::Error;
+use serde::Deserialize;
+use serde::Serialize;
 
 /// A filter to control which suggestion should be applied.
 #[derive(Debug, Clone, Copy)]
@@ -57,7 +59,7 @@ pub fn get_suggestions_from_json<S: ::std::hash::BuildHasher>(
     Ok(result)
 }
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LinePosition {
     pub line: usize,
     pub column: usize,
@@ -69,7 +71,7 @@ impl std::fmt::Display for LinePosition {
     }
 }
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LineRange {
     pub start: LinePosition,
     pub end: LinePosition,
@@ -82,7 +84,7 @@ impl std::fmt::Display for LineRange {
 }
 
 /// An error/warning and possible solutions for fixing it
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Suggestion {
     pub message: String,
     pub snippets: Vec<Snippet>,
@@ -90,7 +92,7 @@ pub struct Suggestion {
 }
 
 /// Solution to a diagnostic item.
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Solution {
     /// The error message of the diagnostic item.
     pub message: String,
@@ -99,7 +101,7 @@ pub struct Solution {
 }
 
 /// Represents code that will get replaced.
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Snippet {
     pub file_name: String,
     pub line_range: LineRange,
@@ -107,7 +109,7 @@ pub struct Snippet {
 }
 
 /// Represents a replacement of a `snippet`.
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Replacement {
     /// Code snippet that gets replaced.
     pub snippet: Snippet,
