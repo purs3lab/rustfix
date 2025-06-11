@@ -46,7 +46,7 @@ pub struct DiagnosticSpan {
     /// If the suggestion is approximate
     pub suggestion_applicability: Option<Applicability>,
     /// Macro invocations that created the code at this span, if any.
-    expansion: Option<Box<DiagnosticSpanMacroExpansion>>,
+    pub expansion: Option<Box<DiagnosticSpanMacroExpansion>>,
 }
 
 /// Indicates the confidence in the correctness of a suggestion.
@@ -90,17 +90,17 @@ pub struct DiagnosticSpanLine {
 
 /// Span information for macro expansions.
 #[derive(Clone, Deserialize, Debug, Eq, PartialEq, Hash)]
-struct DiagnosticSpanMacroExpansion {
+pub struct DiagnosticSpanMacroExpansion {
     /// span where macro was applied to generate this code; note that
     /// this may itself derive from a macro (if
     /// `span.expansion.is_some()`)
-    span: DiagnosticSpan,
+    pub span: DiagnosticSpan,
 
     /// name of macro that was applied (e.g., "foo!" or "#[derive(Eq)]")
-    macro_decl_name: String,
+    pub macro_decl_name: String,
 
     /// span where macro was defined (if known)
-    def_site_span: Option<DiagnosticSpan>,
+    pub def_site_span: Option<DiagnosticSpan>,
 }
 
 /// The error code emitted by the compiler. See [Rust error codes index].
