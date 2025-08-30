@@ -59,7 +59,7 @@ pub fn get_suggestions_from_json<S: ::std::hash::BuildHasher>(
     Ok(result)
 }
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct LinePosition {
     pub line: usize,
     pub column: usize,
@@ -71,7 +71,7 @@ impl std::fmt::Display for LinePosition {
     }
 }
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct LineRange {
     pub start: LinePosition,
     pub end: LinePosition,
@@ -84,7 +84,7 @@ impl std::fmt::Display for LineRange {
 }
 
 /// An error/warning and possible solutions for fixing it
-#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct Suggestion {
     pub message: String,
     pub snippets: Vec<Snippet>,
@@ -92,7 +92,7 @@ pub struct Suggestion {
 }
 
 /// Solution to a diagnostic item.
-#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct Solution {
     /// The error message of the diagnostic item.
     pub message: String,
@@ -108,8 +108,24 @@ pub struct Snippet {
     pub range: Range<usize>,
 }
 
+impl Ord for Snippet {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.file_name
+            .cmp(&other.file_name)
+            .then(self.line_range.cmp(&other.line_range))
+            .then(self.range.start.cmp(&other.range.start))
+            .then(self.range.end.cmp(&other.range.end))
+    }
+}
+
+impl PartialOrd for Snippet {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 /// Represents a replacement of a `snippet`.
-#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize, PartialOrd, Ord)]
 pub struct Replacement {
     /// Code snippet that gets replaced.
     pub snippet: Snippet,
